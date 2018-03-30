@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
+import './Components/UserInput/UserInput.css';
 import UserInput from './Components/UserInput/UserInput';
 import UserOutput from './Components/UserOutput/UserOutput';
+import Validation from './Components/Validation/Validation';
 
 class App extends Component {
 
@@ -16,6 +18,11 @@ class App extends Component {
       }, {
         username: 'The walking dead',
         name: 'Rick'
+      }
+    ],
+    textinput: [
+      {
+        text: 'length of text'
       }
     ]
   }
@@ -32,6 +39,16 @@ class App extends Component {
         }, {
           username: 'The walking dead',
           name: 'Rick'
+        }
+      ]
+    });
+  }
+
+  textInputChangeHandler = (event) => {
+    this.setState({
+      textinput: [
+        {
+          text: event.target.value
         }
       ]
     });
@@ -58,6 +75,16 @@ class App extends Component {
         <UserOutput
           username={this.state.users[2].username}
           name={this.state.users[2].name}/>
+        <div>
+          <input
+            onChange={this.textInputChangeHandler}
+            className="UserInput"
+            type="text"
+            textinput={this.state.textinput[0]}
+            value={this.state.textinput[0].text}/>
+          <Validation textLength={this.state.textinput[0].text.length}/>
+          <p>{this.state.textinput[0].text.length}</p>
+        </div>
       </div>
     );
   }
