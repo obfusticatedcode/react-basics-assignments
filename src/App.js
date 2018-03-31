@@ -4,6 +4,7 @@ import './Components/UserInput/UserInput.css';
 import UserInput from './Components/UserInput/UserInput';
 import UserOutput from './Components/UserOutput/UserOutput';
 import Validation from './Components/Validation/Validation';
+import Char from './Components/Char/Char';
 
 class App extends Component {
 
@@ -22,7 +23,8 @@ class App extends Component {
     ],
     textinput: [
       {
-        text: 'length of text'
+        text: 'some text',
+        id: '1'
       }
     ]
   }
@@ -44,7 +46,7 @@ class App extends Component {
     });
   }
 
-  textInputChangeHandler = (event) => {
+  textInputChangeHandler = (event, index) => {
     this.setState({
       textinput: [
         {
@@ -54,27 +56,62 @@ class App extends Component {
     });
   }
 
+  deleteCharHandler = (charIndex) => {
+    const textinput = [...this.state.textinput];
+    textinput.forEach(textResult => {
+      const textArr = textResult.text.split('');
+      return textArr.map((char, index) => {
+        if(index === charIndex) {
+          textArr.splice(index, 1);
+          return textResult.text = textArr.join('');
+        }
+      })  
+    }); 
+    
+    this.setState({textinput: textinput});  
+  }
+
   render() {
     const style = {
       textTransform: 'uppercase',
       padding: '5px'
     }
 
+    const characters = (
+      <div>
+        {this.state.textinput.map((textResult, textIndex) => {         
+          return textResult.text.split('').map((char, charIndex) => {
+              return <Char
+                click={() => this.deleteCharHandler(charIndex)} 
+                enteredtext={char}
+                key={charIndex}/>
+            });
+          })}
+      </div>
+    );
+
+    const useroutput = (
+      <div>
+        {this.state.users.map((user, userIndex) => {
+          return <UserOutput
+            username={user.username}
+            name={user.name}
+            key={userIndex}
+           />
+        })}
+      </div>
+    );
+
     return (
       <div className="App App__main">
         <h3 style={style}>Meet Our Users</h3>
-        <UserOutput
-          username={this.state.users[0].username}
-          name={this.state.users[0].name}/>
+        {useroutput}
         <UserOutput
           username={this.state.users[1].username}
           name={this.state.users[1].name}>One of my hobbies is coding</UserOutput>
         <UserInput
           changed={this.userNameChangedHandler}
           username={this.state.users[1].username}/>
-        <UserOutput
-          username={this.state.users[2].username}
-          name={this.state.users[2].name}/>
         <div>
           <input
             onChange={this.textInputChangeHandler}
@@ -85,6 +122,7 @@ class App extends Component {
           <Validation textLength={this.state.textinput[0].text.length}/>
           <p>{this.state.textinput[0].text.length}</p>
         </div>
+        <div>{characters}</div>
       </div>
     );
   }
